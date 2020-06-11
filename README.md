@@ -3,6 +3,8 @@
 
 This is a simple music grid web app in which you can tap on cells to create music. The idea is inspired from one of the component in [AntiStress](https://play.google.com/store/apps/details?id=com.JindoBlu.Antistress&hl=en_IN)
 
+Demo: https://music-grid.surge.sh
+
 
 ## How to run
 
@@ -11,7 +13,7 @@ Make sure you have nodejs and npm installed.
 Install the dependencies...
 
 ```bash
-cd svelte-app
+cd music-grid
 npm install
 ```
 
