@@ -20,8 +20,8 @@
 	div {
 		background: #222;
 		border-radius: 3px;
-		width: 2em;
-		height: 2em;
+		width: 1.5em;
+		height: 1.5em;
 		transition: 0.1s ease-in;
 	}
 

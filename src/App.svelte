@@ -1,16 +1,21 @@
 <script>
 	import Row from './Row.svelte'
-	let rows = 15;
-	let columns = 7;
+	import {playRow} from './Music.svelte'
+	let rows = 18;
+	let columns = 12;
 	let grid = [...Array(rows)].map(
 		x => Array(columns).fill(false) );
+	let playing = true;
 
 	let curRow = 0;
 	setInterval(() => {
-		let nextRow = (curRow + 1) % rows;
-		grid[curRow].isPlaying = false;
-		grid[nextRow].isPlaying = true;
-		curRow = nextRow;
+		if(playing) {
+			let nextRow = (curRow + 1) % rows;
+			grid[curRow].isPlaying = false;
+			grid[nextRow].isPlaying = true;
+			curRow = nextRow;
+			playRow(grid[curRow]);
+		}
 	}, 300);
 </script>
 <style>
@@ -18,7 +23,7 @@
 		background: black;
 	}
 
-	h3 {
+	.container {
 		color:#DDD;
 	}
 
@@ -34,4 +39,9 @@
 			<Row bind:row={row} bind:playing={row.isPlaying}/>
 		{/each}
 	</table>
+	<br/>
+	<br/>
+	<label>
+		<input type="checkbox" bind:checked={playing}> Play
+	</label>
 </div>
