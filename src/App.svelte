@@ -6,6 +6,7 @@
 	let grid = [...Array(rows)].map(
 		x => Array(columns).fill(false) );
 	let playing = true;
+	let waveform = 'triangle'
 
 	let curRow = 0;
 	setInterval(() => {
@@ -14,9 +15,14 @@
 			grid[curRow].isPlaying = false;
 			grid[nextRow].isPlaying = true;
 			curRow = nextRow;
-			playRow(grid[curRow]);
+			playRow(grid[curRow], waveform);
 		}
 	}, 300);
+
+	const reset = () => {
+		grid = [...Array(rows)].map(
+			x => Array(columns).fill(false) );
+	}
 </script>
 <style>
 	table {
@@ -44,4 +50,13 @@
 	<label>
 		<input type="checkbox" bind:checked={playing}> Play
 	</label>
+	<br/>
+	<select bind:value={waveform}>
+		<option value="sine">Sine</option>
+		<option value="square">Square</option>
+		<option value="triangle">Triangle</option>
+		<option value="sawtooth">SawTooth</option>
+	</select>
+	<br/>
+	<button on:click={reset}>Clear</button>
 </div>
