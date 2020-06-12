@@ -18,7 +18,7 @@
 	}
 	
 	div {
-		background: #222;
+		background: #444;
 		border-radius: 3px;
 		width: 1.5em;
 		height: 1.5em;

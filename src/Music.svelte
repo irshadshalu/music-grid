@@ -1,5 +1,12 @@
 <script context="module">
-	let context = new AudioContext();
+	import * as Tone from "tone";
+
+	let synth = new Tone.PolySynth(4, Tone.Synth, {
+	  oscillator : {
+			type : "triangle"
+		}
+	}).toMaster();
+	synth.set("detune", -1200);
 
 	let noteValues = [
 		246.94, 277.18, 311.13, 369.99,
@@ -19,26 +26,15 @@
 
     const mapping = rangeMap([0, 4095], [200, 3000])
 
-	const playWithFrequency = (frequency, type) => {
-		let oscillator = context.createOscillator();
-		let gain = context.createGain();
-		oscillator.type = type
-		oscillator.connect(gain)
-		oscillator.frequency.value = frequency
-		gain.connect(context.destination)
-		oscillator.start(0)
-		gain.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 1);
-	}
-
-	export const playRow = (row, waveform) => {
+	export const playRow = (row) => {
 		const rowValue = parseInt(row.map(x => x ? '1' : '0' ).reverse().join(''), 2);
-		// if(rowValue !== 0) {
-		// 	playWithFrequency(mapping(rowValue), 'triangle');
-		// }
 		for (var i = row.length - 1; i >= 0; i--) {
+			let notesToPlay = []
 			if(row[i]) {
-				playWithFrequency(noteValues[Math.floor(i * 1.7)], waveform);
+				notesToPlay.push(noteValues[Math.floor(i * 1.8)]);
 			}
+
+			synth.triggerAttackRelease(notesToPlay, "16n");
 		}
 	}
 </script>
