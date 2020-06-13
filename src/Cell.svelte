@@ -1,7 +1,5 @@
 <script>
 	export let active = false;
-	export let playing = false;
-
 
 	const toggleActive = () => {
 		active = !active;
@@ -30,20 +28,9 @@
 		box-shadow: 0px 0px 8px 2px rgb(255, 255, 255, 0.5);
 	}
 
-	div.playing {
-		background: #f00;
-		transform: scale(1.1);
-	}
-
-	div.active.playing {
-		background: #fff;
-		box-shadow: 0px 0px 10px 3px rgb(255, 255, 255, 0.8);
-	}
-
-
 </style>
 
 <td>
-	<div class:playing={playing} class:active={active} on:click={toggleActive}>
+	<div class:active={active} on:click={toggleActive}>
 	</div>
 </td>

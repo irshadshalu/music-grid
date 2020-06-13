@@ -3,7 +3,7 @@
 	import {playRow} from './Music.svelte'
 	import ClipboardJS from 'clipboard';
 
-	let rows = 18;
+	let rows = 16;
 	let columns = 12;
 	let grid = [];
 	let playing = true;
@@ -44,8 +44,6 @@
 			return window.location.href;
 		}
 	});
-
-
 
 	const changeSpeed = (bpm) => {
 		clearInterval(gameInterval);
@@ -116,11 +114,10 @@
 
 <div class="container" align="center">
 	<h3>Music Grid</h3>
-	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span><br/>
-	<br/>
+	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span>
+	<br/><br/>
 	<label>
-		Rows : {rows}
-		<br/>
+		Rows : {rows}<br/>
 		<input bind:value={rows} on:input={() => clearGrid(rows)} type="range" min="10" max="100" class="slider">
 	</label>
 	<button on:click={() => playing = !playing}> 
@@ -141,8 +138,8 @@
 	</label>
 	<br/>
 	<div class="header" align="center">
-		<a href="https://svelte.dev">Made  in Svelte ♥</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> | 
-		<a href="https://irshadpi.me" >© irshadpi.me</a>
+		<a href="https://svelte.dev">Made with Svelte</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> |
+		<a href="https://irshadpi.me" >by irshadpi.me</a>
 	</div>
 	<br/>
 	<br/>
