@@ -1,12 +1,7 @@
 <script context="module">
 	import * as Tone from "tone";
 
-	let synth = new Tone.PolySynth(4, Tone.Synth, {
-	  oscillator : {
-			type : "triangle"
-		}
-	}).toMaster();
-	synth.set("detune", -1200);
+	let synth;
 
 	let noteValues = [
 		246.94, 277.18, 311.13, 369.99,
@@ -18,15 +13,33 @@
 		2959.96, 3322.44, 3520.00, 3729.31
 	];
 
-    const rangeMap = (a, b) => s => {
-      const [a1, a2] = a;
-      const [b1, b2] = b;
-      return (((((b2 - b1) * (s - a1)) / (a2 - a1)) * 10) + (10 * b1)) / 10;
-    };
+	const rangeMap = (a, b) => s => {
+		const [a1, a2] = a;
+		const [b1, b2] = b;
+		return (((((b2 - b1) * (s - a1)) / (a2 - a1)) * 10) + (10 * b1)) / 10;
+	};
 
-    const mapping = rangeMap([0, 4095], [200, 3000])
+	const mapping = rangeMap([0, 4095], [200, 3000])
+
+	export const initAudio = async () => {
+		synth = new Tone.PolySynth(4, Tone.Synth, {
+			oscillator : {
+				type : "triangle"
+			}
+		}).toMaster();
+
+		synth.set("detune", -1200);
+
+		await Tone.start();
+		await Tone.context.resume();
+		console.log('audio is ready');
+	}
 
 	export const playRow = (row) => {
+		if(!synth) {
+			console.error("Please initialize audio before playing a row");
+			return;
+		}
 		const rowValue = parseInt(row.map(x => x ? '1' : '0' ).reverse().join(''), 2);
 		for (var i = row.length - 1; i >= 0; i--) {
 			let notesToPlay = []
