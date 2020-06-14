@@ -10,6 +10,7 @@
 	let speed = 200;
 	let gameInterval;
 	let curRow = 0;
+	let lastRow = 0;
 	let shareMessage = 'Share';
 	let started = false;
 	let urlUpdatedRecently = false;
@@ -75,11 +76,12 @@
 		clearInterval(gameInterval);
 		gameInterval = setInterval(() => {
 			if(playing) {
-				let nextRow = (curRow + 1) % grid.length;
-				grid[curRow].isPlaying = false;
-				grid[nextRow].isPlaying = true;
-				curRow = nextRow;
+				grid[lastRow].isPlaying = false;
+				grid[curRow].isPlaying = true;
 				playRow(grid[curRow]);
+				let nextRow = (curRow + 1) % grid.length;
+				lastRow  = curRow;
+				curRow = nextRow;
 			}
 		},  60*1000 / bpm);
 
