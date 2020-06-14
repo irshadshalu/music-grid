@@ -22,15 +22,30 @@
 	}
 
 	const clearGrid = (rows) => {
+		curRow = 0;
 		grid = [...Array(rows)].map(
 			x => Array(columns).fill(false) );
+	}
+
+	const resizeGrid = (rows) => {
+		playing = false;
+		grid[curRow].isPlaying = false;
 		curRow = 0;
+		while(grid.length < rows) {
+			grid.push([...Array(columns).fill(false)]);
+		}
+
+		while(grid.length > rows) {
+			grid.pop();
+		}
+
+		grid[0].isPlaying = false;
 	}
 
 	const initGrid = (hash) => {
 		playing = false;
 		let array = hash.split('&')[0].slice(1).split('-').map(x => parseInt(x, 10));
-		rows = array.length - 2;
+		rows = array.length - 1;
 		grid = []
 		for (var i = array.length - 2; i >= 0; i--) {
 			let temp = [... Array(columns).fill(false)];
@@ -127,7 +142,7 @@
 	<br/><br/>
 	<label>
 		Rows : {rows}<br/>
-		<input bind:value={rows} on:input={() => clearGrid(rows)} type="range" min="10" max="100" class="slider">
+		<input bind:value={rows} on:input={() => resizeGrid(rows)} type="range" min="10" max="100" class="slider">
 	</label>
 	<button on:click={togglePlaying}> 
 		{ playing ? "Pause" : "Play" }
