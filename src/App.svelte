@@ -79,7 +79,7 @@
 			}
 			res += (temp + '-');
 		}
-		window.location.hash = res + '&' + speed; 
+		history.replaceState({}, null, '#' + res + '&' + speed); 
 	}
 
 	$: changeSpeed(speed);
