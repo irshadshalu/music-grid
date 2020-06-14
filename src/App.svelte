@@ -12,6 +12,7 @@
 	let curRow = 0;
 	let shareMessage = 'Share';
 	let started = false;
+	let urlUpdatedRecently = false;
 
 	const togglePlaying = async () => {
 		playing = !playing;
@@ -61,6 +62,7 @@
 
 	new ClipboardJS('.share', {
 		text: function() {
+			encodeGridToUrl(grid);
 			shareMessage = 'Link copied';
 			setTimeout(function() {
 				shareMessage = 'Share';
@@ -84,7 +86,7 @@
 		updateUrl(grid);
 	}
 
-	const updateUrl = (grid) => {
+	const encodeGridToUrl = (grid) => {
 		let res = ''
 		for (var i = grid.length - 1; i >= 0; i--) {
 			let temp = 0, k = 1;
@@ -94,7 +96,15 @@
 			}
 			res += (temp + '-');
 		}
-		history.replaceState({}, null, '#' + res + '&' + speed); 
+		history.replaceState({}, '', '#' + res + '&' + speed);
+	}
+
+	const updateUrl = (grid) => {
+		if(!urlUpdatedRecently) {
+			encodeGridToUrl(grid);
+			urlUpdatedRecently = true;
+			setTimeout(() => {urlUpdatedRecently = false}, 1000);
+		}
 	}
 
 	$: changeSpeed(speed);
