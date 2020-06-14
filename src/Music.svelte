@@ -41,13 +41,12 @@
 			return;
 		}
 		const rowValue = parseInt(row.map(x => x ? '1' : '0' ).reverse().join(''), 2);
+		let notesToPlay = []
 		for (var i = row.length - 1; i >= 0; i--) {
-			let notesToPlay = []
 			if(row[i]) {
 				notesToPlay.push(noteValues[Math.floor(i * 1.8)]);
 			}
-
-			synth.triggerAttackRelease(notesToPlay, "16n");
 		}
+		synth.triggerAttackRelease(notesToPlay, "16n");
 	}
 </script>

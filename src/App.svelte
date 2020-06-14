@@ -79,9 +79,8 @@
 				grid[lastRow].isPlaying = false;
 				grid[curRow].isPlaying = true;
 				playRow(grid[curRow]);
-				let nextRow = (curRow + 1) % grid.length;
 				lastRow  = curRow;
-				curRow = nextRow;
+				curRow = (curRow + 1) % grid.length;
 			}
 		},  60*1000 / bpm);
 
