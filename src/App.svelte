@@ -23,6 +23,13 @@
 		}
 	}
 
+	const stopPlaying = () => {
+		playing = false;
+		grid[lastRow].isPlaying = false;
+		grid[curRow].isPlaying = false;
+		curRow = 0;
+	}
+
 	const clearGrid = (rows) => {
 		curRow = 0;
 		grid = [...Array(rows)].map(
@@ -30,9 +37,7 @@
 	}
 
 	const resizeGrid = (rows) => {
-		playing = false;
-		grid[curRow].isPlaying = false;
-		curRow = 0;
+		stopPlaying();
 		while(grid.length < rows) {
 			grid.push([...Array(columns).fill(false)]);
 		}
@@ -159,6 +164,7 @@
 	<button on:click={togglePlaying}> 
 		{ playing ? "Pause" : "Play" }
 	</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	<button on:click={stopPlaying}>Stop</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button class="share">{shareMessage}</button>
 	<table>
