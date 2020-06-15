@@ -1,6 +1,11 @@
 <script>
 	export let active = false;
 
+	const drawActive = (e) => {
+		if(e.buttons) {
+			toggleActive()
+		}
+	}
 	const toggleActive = () => {
 		active = !active;
 	}
@@ -21,6 +26,8 @@
 		width: 1.5em;
 		height: 1.5em;
 		transition: 0.1s ease-in;
+		user-drag: none; 
+		user-select: none;
 	}
 
 	div.active {
@@ -31,6 +38,6 @@
 </style>
 
 <td>
-	<div class:active={active} on:click={toggleActive}>
+	<div class:active={active} on:mouseover|capture={drawActive} on:click={toggleActive} >
 	</div>
 </td>
