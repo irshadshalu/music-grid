@@ -7,7 +7,7 @@
 		}
 	}
 	const toggleActive = () => {
-			active = !active;
+		active = !active;
 	}
 </script>
 
