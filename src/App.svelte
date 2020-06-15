@@ -25,9 +25,14 @@
 
 	const stopPlaying = () => {
 		playing = false;
-		grid[lastRow].isPlaying = false;
-		grid[curRow].isPlaying = false;
+		if(lastRow < grid.length) {
+			grid[lastRow].isPlaying = false;
+		}
+		if(curRow < grid.length) {
+			grid[curRow].isPlaying = false;
+		}
 		curRow = 0;
+		lastRow = 0;
 	}
 
 	const clearGrid = (rows) => {
