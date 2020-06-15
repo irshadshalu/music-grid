@@ -138,9 +138,10 @@
 		color: #ddd;
 	}
 
-	.header a{
+	.footer a{
 		font-size: 0.8em;
 		color: #ccc;
+		text-decoration: underline;
 	}
 
 	.tagline {
@@ -183,9 +184,11 @@
 		<input bind:value={speed} type="range" min="60" max="500" class="slider">
 	</label>
 	<br/>
-	<div class="header" align="center">
+	<div class="footer" align="center">
+		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" >Best of Music Grid</a>
+		<br/>
 		<a href="https://svelte.dev">Made with Svelte</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> |
-		<a href="https://irshadpi.me" >by irshadpi.me</a>
+		<a href="https://irshadpi.me" >irshadpi.me</a> 
 	</div>
 	<br/>
 	<br/>
