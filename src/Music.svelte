@@ -42,7 +42,6 @@
 		if(!synth) {
 			await initAudio();
 		}
-		let notesToPlay = [noteValues[Math.floor(index * 1.8)]];
-		synth.triggerAttackRelease(notesToPlay, "16n");
+		synth.triggerAttackRelease(notes[index], "16n");
 	}
 </script>

@@ -33,7 +33,7 @@
 		border-radius: 3px;
 		width: 1.5em;
 		height: 1.5em;
-		transition: 0.1s ease-in;
+		transition: 0.06s ease-in;
 		user-drag: none; 
 		user-select: none;
 	}
