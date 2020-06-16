@@ -23,6 +23,18 @@
 		}
 	}
 
+	const stopPlaying = () => {
+		playing = false;
+		if(lastRow < grid.length) {
+			grid[lastRow].isPlaying = false;
+		}
+		if(curRow < grid.length) {
+			grid[curRow].isPlaying = false;
+		}
+		curRow = 0;
+		lastRow = 0;
+	}
+
 	const clearGrid = (rows) => {
 		curRow = 0;
 		grid = [...Array(rows)].map(
@@ -30,9 +42,7 @@
 	}
 
 	const resizeGrid = (rows) => {
-		playing = false;
-		grid[curRow].isPlaying = false;
-		curRow = 0;
+		stopPlaying();
 		while(grid.length < rows) {
 			grid.push([...Array(columns).fill(false)]);
 		}
@@ -128,9 +138,10 @@
 		color: #ddd;
 	}
 
-	.header a{
+	.footer a{
 		font-size: 0.8em;
 		color: #ccc;
+		text-decoration: underline;
 	}
 
 	.tagline {
@@ -158,6 +169,7 @@
 	<button on:click={togglePlaying}> 
 		{ playing ? "Pause" : "Play" }
 	</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	<button on:click={stopPlaying}>Stop</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button class="share">{shareMessage}</button>
 	<table>
@@ -172,9 +184,11 @@
 		<input bind:value={speed} type="range" min="60" max="500" class="slider">
 	</label>
 	<br/>
-	<div class="header" align="center">
+	<div class="footer" align="center">
+		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" >Best of Music Grid</a>
+		<br/>
 		<a href="https://svelte.dev">Made with Svelte</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> |
-		<a href="https://irshadpi.me" >by irshadpi.me</a>
+		<a href="https://irshadpi.me" >irshadpi.me</a> 
 	</div>
 	<br/>
 	<br/>
