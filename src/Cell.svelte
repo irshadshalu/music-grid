@@ -3,6 +3,7 @@
 
 	export let active = false;
 	export let column = 0;
+	export let paused = false;
 
 	const drawActive = (e) => {
 		if(e.buttons) {
@@ -12,7 +13,9 @@
 
 	const toggleActive = () => {
 		active = !active;
-		playCell(column);
+		if(paused && active) {
+			playCell(column);
+		}
 	}
 </script>
 
@@ -43,6 +46,6 @@
 </style>
 
 <td>
-	<div class:active={active} on:pointerover|capture={drawActive} on:click={toggleActive} >
+	<div class:active={active} on:mouseover|capture={drawActive} on:click={toggleActive}>
 	</div>
 </td>

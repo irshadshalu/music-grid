@@ -174,7 +174,7 @@
 	<button class="share">{shareMessage}</button>
 	<table>
 		{#each grid as row}
-			<Row bind:row={row} bind:playing={row.isPlaying}/>
+			<Row bind:row={row} bind:playing={row.isPlaying} paused={!playing}/>
 		{/each}
 	</table>
 	<br/>
