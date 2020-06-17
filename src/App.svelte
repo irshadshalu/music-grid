@@ -1,6 +1,7 @@
 <script>
 	import Row from './Row.svelte'
 	import {playRow} from './Music.svelte'
+	import ClipboardJS from 'clipboard';
 
 	let rows = 18;
 	let columns = 12;
@@ -10,6 +11,7 @@
 	let gameInterval;
 	let data = '18,12;'
 	let curRow = 0;
+	let shareMessage = 'Share';
 
 	const clearGrid = () => {
 		grid = [...Array(rows)].map(
@@ -30,9 +32,15 @@
 		console.log(grid);
 	}
 
-	const copyUrl = () => {
-
-	}
+	new ClipboardJS('.share', {
+		text: function() {
+			shareMessage = 'Link copied';
+			setTimeout(function() {
+				shareMessage = 'Share';
+			}, 3000);
+			return window.location.href;
+		}
+	});
 
 
 	if(window.location.hash === '') {
@@ -113,7 +121,7 @@
 		{ playing ? "Pause" : "Play" }
 	</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button on:click={clearGrid}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button on:click={copyUrl}>Share</button>
+	<button class="share">{shareMessage}</button>
 	<table>
 		{#each grid as row}
 			<Row bind:row={row} bind:playing={row.isPlaying}/>
