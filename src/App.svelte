@@ -15,6 +15,7 @@
 	const clearGrid = (rows) => {
 		grid = [...Array(rows)].map(
 			x => Array(columns).fill(false) );
+		curRow = 0;
 	}
 
 	const initGrid = (hash) => {
