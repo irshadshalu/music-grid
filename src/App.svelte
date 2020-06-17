@@ -9,11 +9,10 @@
 	let playing = true;
 	let speed = 200;
 	let gameInterval;
-	let data = '18,12;'
 	let curRow = 0;
 	let shareMessage = 'Share';
 
-	const clearGrid = () => {
+	const clearGrid = (rows) => {
 		grid = [...Array(rows)].map(
 			x => Array(columns).fill(false) );
 	}
@@ -22,13 +21,14 @@
 		playing = false;
 		let array = hash.split('&')[0].slice(1).split('-').map(x => parseInt(x, 10));
 		grid = []
-		for (var i = rows - 1; i >= 0; i--) {
+		for (var i = array.length - 2; i >= 0; i--) {
 			let temp = [... Array(columns).fill(false)];
 			for (var j = columns - 1; j >= 0; j--) {
 				temp[j] = (array[i] & (1 << (j))) !== 0;
 			}
 			grid.push(temp.reverse());
 		}
+		rows = grid.length;
 		if(hash.split('&').length > 1) {
 			speed = parseInt(hash.split('&')[1], 10);
 		}
@@ -46,7 +46,7 @@
 
 
 	if(window.location.hash === '') {
-		clearGrid();
+		clearGrid(rows);
 	} else {
 		initGrid(window.location.hash);
 	}
@@ -83,6 +83,8 @@
 
 	$: updateUrl(grid);
 
+	$: clearGrid(rows);
+
 </script>
 <style>
 	table {
@@ -106,6 +108,9 @@
 	.message {
 		font-size: 0.7em;
 	}
+	input[type=range] {
+		width: 20em;
+	}
 </style>
 
 
@@ -113,10 +118,15 @@
 	<h3>Music Grid</h3>
 	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span><br/>
 	<br/>
+	<label>
+		Rows : {rows}
+		<br/>
+		<input bind:value={rows} type="range" min="10" max="100" class="slider">
+	</label>
 	<button on:click={() => playing = !playing}> 
 		{ playing ? "Pause" : "Play" }
 	</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button on:click={clearGrid}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button class="share">{shareMessage}</button>
 	<table>
 		{#each grid as row}
