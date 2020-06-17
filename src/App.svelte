@@ -1,16 +1,25 @@
 <script>
-	import Row from './Row.svelte'
-	import {playRow} from './Music.svelte'
+	import Row from './Row.svelte';
 	import ClipboardJS from 'clipboard';
+	import {initAudio, playRow} from './Music.svelte';
 
 	let rows = 16;
 	let columns = 12;
 	let grid = [];
-	let playing = true;
+	let playing = false;
 	let speed = 200;
 	let gameInterval;
 	let curRow = 0;
 	let shareMessage = 'Share';
+	let started = false;
+
+	const togglePlaying = async () => {
+		playing = !playing;
+		if(!started) {
+			started = true;
+			await initAudio();
+		}
+	}
 
 	const clearGrid = (rows) => {
 		grid = [...Array(rows)].map(
@@ -114,13 +123,13 @@
 
 <div class="container" align="center">
 	<h3>Music Grid</h3>
-	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span>
+	<span class="tagline">Turn on sound. Tap on the grid. Hit Play button. You'll figure it out ;)</span>
 	<br/><br/>
 	<label>
 		Rows : {rows}<br/>
 		<input bind:value={rows} on:input={() => clearGrid(rows)} type="range" min="10" max="100" class="slider">
 	</label>
-	<button on:click={() => playing = !playing}> 
+	<button on:click={togglePlaying}> 
 		{ playing ? "Pause" : "Play" }
 	</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
