@@ -72,7 +72,7 @@
 			}
 			res += (temp + '-');
 		}
-		window.location.hash=res;
+		window.location.hash = res;
 	}
 
 	$: changeSpeed(speed);
@@ -106,16 +106,8 @@
 
 
 <div class="container" align="center">
-	<div class="header" align="center">
-		<a href="https://svelte.dev">Made  in Svelte ♥</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> | 
-		<a href="https://irshadpi.me" >© irshadpi.me</a>
-	</div>
 	<h3>Music Grid</h3>
 	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span><br/>
-	{#if !playing}
-		<span class="message">Click play to start</span>
-		<br/>
-	{/if}
 	<br/>
 	<button on:click={() => playing = !playing}> 
 		{ playing ? "Pause" : "Play" }
@@ -133,4 +125,11 @@
 		<br/>
 		<input bind:value={speed} type="range" min="60" max="500" class="slider">
 	</label>
+	<br/>
+	<div class="header" align="center">
+		<a href="https://svelte.dev">Made  in Svelte ♥</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> | 
+		<a href="https://irshadpi.me" >© irshadpi.me</a>
+	</div>
+	<br/>
+	<br/>
 </div>
