@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "clipboard": "^2.0.6",
+    "lottie-web": "^5.6.10",
     "sirv-cli": "^0.4.4",
     "tone": "^13.8.25"
   }

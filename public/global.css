@@ -71,7 +71,7 @@ body {
 }
 
 input[type=range] {
-  width: 20%;
+  width: 33%;
   margin: 6.3px 0;
   background-color: transparent;
   -webkit-appearance: none;

@@ -20,7 +20,7 @@
 
 	const initGrid = (hash) => {
 		playing = false;
-		let array = hash.slice(1).split('-').map(x => parseInt(x, 10));
+		let array = hash.split('&')[0].slice(1).split('-').map(x => parseInt(x, 10));
 		grid = []
 		for (var i = rows - 1; i >= 0; i--) {
 			let temp = [... Array(columns).fill(false)];
@@ -29,7 +29,9 @@
 			}
 			grid.push(temp.reverse());
 		}
-		console.log(grid);
+		if(hash.split('&').length > 1) {
+			speed = parseInt(hash.split('&')[1], 10);
+		}
 	}
 
 	new ClipboardJS('.share', {
@@ -60,6 +62,8 @@
 				playRow(grid[curRow]);
 			}
 		},  60*1000 / bpm);
+
+		updateUrl(grid);
 	}
 
 	const updateUrl = (grid) => {
@@ -72,7 +76,7 @@
 			}
 			res += (temp + '-');
 		}
-		window.location.hash = res;
+		window.location.hash = res + '&' + speed; 
 	}
 
 	$: changeSpeed(speed);
