@@ -21,6 +21,7 @@
 	const initGrid = (hash) => {
 		playing = false;
 		let array = hash.split('&')[0].slice(1).split('-').map(x => parseInt(x, 10));
+		rows = array.length - 2;
 		grid = []
 		for (var i = array.length - 2; i >= 0; i--) {
 			let temp = [... Array(columns).fill(false)];
@@ -29,7 +30,6 @@
 			}
 			grid.push(temp.reverse());
 		}
-		rows = grid.length;
 		if(hash.split('&').length > 1) {
 			speed = parseInt(hash.split('&')[1], 10);
 		}
@@ -46,17 +46,12 @@
 	});
 
 
-	if(window.location.hash === '') {
-		clearGrid(rows);
-	} else {
-		initGrid(window.location.hash);
-	}
 
 	const changeSpeed = (bpm) => {
 		clearInterval(gameInterval);
 		gameInterval = setInterval(() => {
 			if(playing) {
-				let nextRow = (curRow + 1) % rows;
+				let nextRow = (curRow + 1) % grid.length;
 				grid[curRow].isPlaying = false;
 				grid[nextRow].isPlaying = true;
 				curRow = nextRow;
@@ -84,7 +79,11 @@
 
 	$: updateUrl(grid);
 
-	$: clearGrid(rows);
+	clearGrid(rows);
+
+	if(window.location.hash !== '') {
+		initGrid(window.location.hash);
+	}
 
 </script>
 <style>
@@ -122,7 +121,7 @@
 	<label>
 		Rows : {rows}
 		<br/>
-		<input bind:value={rows} type="range" min="10" max="100" class="slider">
+		<input bind:value={rows} on:input={() => clearGrid(rows)} type="range" min="10" max="100" class="slider">
 	</label>
 	<button on:click={() => playing = !playing}> 
 		{ playing ? "Pause" : "Play" }
