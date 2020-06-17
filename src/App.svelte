@@ -4,16 +4,41 @@
 
 	let rows = 18;
 	let columns = 12;
-	let grid = [...Array(rows)].map(
-		x => Array(columns).fill(false) );
+	let grid = [];
 	let playing = true;
 	let speed = 200;
 	let gameInterval;
-
+	let data = '18,12;'
 	let curRow = 0;
-	const reset = () => {
+
+	const clearGrid = () => {
 		grid = [...Array(rows)].map(
 			x => Array(columns).fill(false) );
+	}
+
+	const initGrid = (hash) => {
+		playing = false;
+		let array = hash.slice(1).split('-').map(x => parseInt(x, 10));
+		grid = []
+		for (var i = rows - 1; i >= 0; i--) {
+			let temp = [... Array(columns).fill(false)];
+			for (var j = columns - 1; j >= 0; j--) {
+				temp[j] = (array[i] & (1 << (j))) !== 0;
+			}
+			grid.push(temp.reverse());
+		}
+		console.log(grid);
+	}
+
+	const copyUrl = () => {
+
+	}
+
+
+	if(window.location.hash === '') {
+		clearGrid();
+	} else {
+		initGrid(window.location.hash);
 	}
 
 	const changeSpeed = (bpm) => {
@@ -29,7 +54,23 @@
 		},  60*1000 / bpm);
 	}
 
+	const updateUrl = (grid) => {
+		let res = ''
+		for (var i = grid.length - 1; i >= 0; i--) {
+			let temp = 0, k = 1;
+			for (var j = grid[i].length - 1; j >= 0; j--) {
+				temp = temp + k * grid[i][j];
+				k = k * 2;
+			}
+			res += (temp + '-');
+		}
+		window.location.hash=res;
+	}
+
 	$: changeSpeed(speed);
+
+	$: updateUrl(grid);
+
 </script>
 <style>
 	table {
@@ -44,6 +85,15 @@
 		font-size: 0.8em;
 		color: #ccc;
 	}
+
+	.tagline {
+		font-size: 0.8em;
+		font-weight: 600;
+	}
+
+	.message {
+		font-size: 0.7em;
+	}
 </style>
 
 
@@ -53,9 +103,17 @@
 		<a href="https://irshadpi.me" >© irshadpi.me</a>
 	</div>
 	<h3>Music Grid</h3>
-	<h5>Turn on sound. Tap on the grid. You'll figure it out ;)</h5>
+	<span class="tagline">Turn on sound. Tap on the grid. You'll figure it out ;)</span><br/>
+	{#if !playing}
+		<span class="message">Click play to start</span>
+		<br/>
+	{/if}
 	<br/>
-	<br/>
+	<button on:click={() => playing = !playing}> 
+		{ playing ? "Pause" : "Play" }
+	</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	<button on:click={clearGrid}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	<button on:click={copyUrl}>Share</button>
 	<table>
 		{#each grid as row}
 			<Row bind:row={row} bind:playing={row.isPlaying}/>
@@ -65,11 +123,6 @@
 	<label>
 		Speed : {speed} bpm 
 		<br/>
-		<input bind:value={speed} type="range" min="60" max="400" class="slider">
+		<input bind:value={speed} type="range" min="60" max="500" class="slider">
 	</label>
-		<br/>
-	<button on:click={() => playing = !playing}> 
-		{ playing ? "Pause" : "Play" }
-	</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button on:click={reset}>Clear</button>
 </div>
