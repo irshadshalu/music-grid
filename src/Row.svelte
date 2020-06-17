@@ -16,7 +16,7 @@
 
 
 <tr class:playing={playing}>
-	{#each row as cell}
-		<Cell bind:active={cell}></Cell>
+	{#each row as cell, index}
+		<Cell bind:active={cell} column="{index}"></Cell>
 	{/each}
 </tr>

@@ -1,10 +1,13 @@
 <script>
+	import {playCell} from './Music.svelte'
+
 	export let active = false;
 	export let playing = false;
-
+	export let column = 0;
 
 	const toggleActive = () => {
 		active = !active;
+		playCell(column);
 	}
 </script>
 
