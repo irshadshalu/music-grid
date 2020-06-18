@@ -172,7 +172,7 @@
 	<button on:click={stopPlaying}>Stop</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
 	<button class="share">{shareMessage}</button>
-	<table>
+	<table on:click|once={() => playing=true}>
 		{#each grid as row}
 			<Row bind:row={row} bind:playing={row.isPlaying} paused={!playing}/>
 		{/each}
