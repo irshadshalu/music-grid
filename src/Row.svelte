@@ -2,6 +2,7 @@
 	import Cell from './Cell.svelte'
 	export let row = [];
 	export let playing = false;
+	export let paused = false;
 </script>
 
 <style>
@@ -16,7 +17,7 @@
 
 
 <tr class:playing={playing}>
-	{#each row as cell}
-		<Cell bind:active={cell}></Cell>
+	{#each row as cell, index}
+		<Cell bind:active={cell} column="{index}" paused={paused}></Cell>
 	{/each}
 </tr>

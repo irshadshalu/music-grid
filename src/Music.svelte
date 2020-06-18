@@ -37,4 +37,11 @@
 		}
 		synth.triggerAttackRelease(notesToPlay, "16n");
 	}
+
+	export const playCell = async (index) => {
+		if(!synth) {
+			await initAudio();
+		}
+		synth.triggerAttackRelease(notes[index], "16n");
+	}
 </script>
