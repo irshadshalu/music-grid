@@ -8,7 +8,6 @@
 	export let config;
 
 	let urlUpdatedRecently = false;
-	let settingsOpen = false;
 	let scrollY = 0;
 
 	const encodeGridToUrl = (grid, speed) => {
@@ -129,6 +128,4 @@
 		<a class="share"><i class="fa fa-lg fa-share-alt"/></a>
 		<a on:click={() => dispatch('clear')}><i class="fa fa-lg fa-trash"/></a>
 	</div>
-	{#if settingsOpen}
-	{/if}
 </div>
