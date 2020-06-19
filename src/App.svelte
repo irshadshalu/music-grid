@@ -1,30 +1,38 @@
 <script>
 	import Row from './Row.svelte';
-	import ClipboardJS from 'clipboard';
+	import Controls from './Controls.svelte';
 	import {initAudio, playRow} from './Music.svelte';
 
-	let rows = 16;
+	export let config = {
+		playing: false,
+		speed: 200,
+		rows: 16
+	}
+
 	let columns = 12;
 	let grid = [];
-	let playing = false;
-	let speed = 200;
 	let gameInterval;
 	let curRow = 0;
 	let lastRow = 0;
-	let shareMessage = 'Share';
 	let started = false;
-	let urlUpdatedRecently = false;
 
 	const togglePlaying = async () => {
-		playing = !playing;
+		config.playing = !config.playing;
 		if(!started) {
+			startPlaying();
+		}
+	}
+
+	const startPlaying = async () => {
+		if(!started) {
+			config.playing = true;
 			started = true;
 			await initAudio();
 		}
 	}
 
 	const stopPlaying = () => {
-		playing = false;
+		config.playing = false;
 		if(lastRow < grid.length) {
 			grid[lastRow].isPlaying = false;
 		}
@@ -55,9 +63,9 @@
 	}
 
 	const initGrid = (hash) => {
-		playing = false;
+		config.playing = false;
 		let array = hash.split('&')[0].slice(1).split('-').map(x => parseInt(x, 10));
-		rows = array.length - 1;
+		config.rows = array.length - 1;
 		grid = []
 		for (var i = array.length - 2; i >= 0; i--) {
 			let temp = [... Array(columns).fill(false)];
@@ -67,25 +75,14 @@
 			grid.push(temp.reverse());
 		}
 		if(hash.split('&').length > 1) {
-			speed = parseInt(hash.split('&')[1], 10);
+			config.speed = parseInt(hash.split('&')[1], 10);
 		}
 	}
-
-	new ClipboardJS('.share', {
-		text: function() {
-			encodeGridToUrl(grid);
-			shareMessage = 'Link copied';
-			setTimeout(function() {
-				shareMessage = 'Share';
-			}, 3000);
-			return window.location.href;
-		}
-	});
 
 	const changeSpeed = (bpm) => {
 		clearInterval(gameInterval);
 		gameInterval = setInterval(() => {
-			if(playing) {
+			if(config.playing) {
 				grid[lastRow].isPlaying = false;
 				grid[curRow].isPlaying = true;
 				playRow(grid[curRow]);
@@ -93,36 +90,11 @@
 				curRow = (curRow + 1) % grid.length;
 			}
 		},  60*1000 / bpm);
-
-		updateUrl(grid);
 	}
 
-	const encodeGridToUrl = (grid) => {
-		let res = ''
-		for (var i = grid.length - 1; i >= 0; i--) {
-			let temp = 0, k = 1;
-			for (var j = grid[i].length - 1; j >= 0; j--) {
-				temp = temp + k * grid[i][j];
-				k = k * 2;
-			}
-			res += (temp + '-');
-		}
-		history.replaceState({}, '', '#' + res + '&' + speed);
-	}
+	$: changeSpeed(config.speed);
 
-	const updateUrl = (grid) => {
-		if(!urlUpdatedRecently) {
-			encodeGridToUrl(grid);
-			urlUpdatedRecently = true;
-			setTimeout(() => {urlUpdatedRecently = false}, 1000);
-		}
-	}
-
-	$: changeSpeed(speed);
-
-	$: updateUrl(grid);
-
-	clearGrid(rows);
+	clearGrid(config.rows);
 
 	if(window.location.hash !== '') {
 		initGrid(window.location.hash);
@@ -161,28 +133,20 @@
 <div class="container" align="center">
 	<h3>Music Grid</h3>
 	<span class="tagline">Turn on sound. Tap on the grid. Hit Play button. You'll figure it out ;)</span>
-	<br/><br/>
-	<label>
-		Rows : {rows}<br/>
-		<input bind:value={rows} on:input={() => resizeGrid(rows)} type="range" min="10" max="100" class="slider">
-	</label>
-	<button on:click={togglePlaying}> 
-		{ playing ? "Pause" : "Play" }
-	</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button on:click={stopPlaying}>Stop</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button on:click={() => clearGrid(rows)}>Clear</button>&nbsp;&nbsp;&nbsp;&nbsp;
-	<button class="share">{shareMessage}</button>
-	<table on:click|once={() => playing=true}>
+	<br/>
+	<Controls
+		bind:grid={grid}
+		bind:config={config}
+		on:playpause={togglePlaying}
+		on:stop={stopPlaying}
+		on:clear={() => clearGrid(config.rows)}
+		on:rowchange={() => resizeGrid(config.rows)}
+	/>
+	<table on:click|once={startPlaying}>
 		{#each grid as row}
-			<Row bind:row={row} bind:playing={row.isPlaying} paused={!playing}/>
+			<Row bind:row={row} bind:playing={row.isPlaying} paused={!config.playing}/>
 		{/each}
 	</table>
-	<br/>
-	<label>
-		Speed : {speed} bpm 
-		<br/>
-		<input bind:value={speed} type="range" min="60" max="500" class="slider">
-	</label>
 	<br/>
 	<div class="footer" align="center">
 		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" >Best of Music Grid</a>
