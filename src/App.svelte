@@ -3,7 +3,7 @@
 	import Controls from './Controls.svelte';
 	import {initAudio, playRow} from './Music.svelte';
 
-	export let config = {
+	let config = {
 		playing: false,
 		speed: 200,
 		rows: 16
