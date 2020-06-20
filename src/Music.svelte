@@ -23,9 +23,10 @@
 		console.log('audio is ready');
 	}
 
-	export const playRow = (row) => {
+	export const playRow = async (row) => {
 		if(!synth) {
 			console.error("Please initialize audio before playing a row");
+			await initAudio();
 			return;
 		}
 
