@@ -1,8 +1,7 @@
 <script>
 	import Row from './Row.svelte';
 	import Controls from './Controls.svelte';
-	import {initAudio, playRow} from './Music.svelte';
-
+	import {initAudio, playRow, startRecording, stopRecording} from './Music.svelte';
 	let config = {
 		playing: false,
 		speed: 200,
@@ -15,6 +14,8 @@
 	let curRow = 0;
 	let lastRow = 0;
 	let started = false;
+	let downloadLink;
+	let message;
 
 	const togglePlaying = async () => {
 		config.playing = !config.playing;
@@ -89,7 +90,26 @@
 				lastRow  = curRow;
 				curRow = (curRow + 1) % grid.length;
 			}
-		},  60*1000 / bpm);
+		},  60 * 1000 / bpm);
+	}
+
+	const downloadAudio = () => {
+		stopPlaying();
+		config.playing = true;
+		startRecording(downloadLink);
+		message = "Please wait for the playback to finish";
+
+		// Play to completion
+		let playbackTime = (grid.length * 60 * 1000) / config.speed;
+		setTimeout(() => {
+			stopPlaying();
+		}, playbackTime);
+
+		// Record for a bit more.
+		setTimeout(() => {
+			stopRecording();
+			message = null;
+		}, playbackTime + 1000);
 	}
 
 	$: changeSpeed(config.speed);
@@ -123,7 +143,9 @@
 
 	.message {
 		font-size: 0.7em;
+		color: red;
 	}
+
 	input[type=range] {
 		width: 20em;
 	}
@@ -141,7 +163,12 @@
 		on:stop={stopPlaying}
 		on:clear={() => clearGrid(config.rows)}
 		on:rowchange={() => resizeGrid(config.rows)}
+		on:download={downloadAudio}
 	/>
+	{#if message}
+		<span class="message">{message}</span>
+	{/if}
+	<a bind:this={downloadLink} download="music-grid.webm" hidden="true"></a>
 	<table on:click|once={startPlaying}>
 		{#each grid as row}
 			<Row bind:row={row} bind:playing={row.isPlaying} paused={!config.playing}/>

@@ -79,9 +79,9 @@
 	}
 
 	a {
-		margin-left: 1.3em;
-		margin-right: 1.3em;
-		padding: 10px;
+		margin-right: 4px;
+		margin-left: 4px;
+		padding: 12px;
 		color: white;
 	}
 
@@ -127,5 +127,6 @@
 		<a on:click={() => dispatch('stop')}><i class="fa fa-inverse fa-lg fa-stop"/></a>
 		<a class="share"><i class="fa fa-lg fa-share-alt"/></a>
 		<a on:click={() => dispatch('clear')}><i class="fa fa-lg fa-trash"/></a>
+		<a on:click={() => dispatch('download')}><i class="fa fa-lg fa-download"/></a>
 	</div>
 </div>

@@ -2,6 +2,8 @@
 	import * as Tone from "tone";
 
 	let synth;
+	let recorder;
+	let destinationStream;
 
 	let notes = [
 		'B3', 'C#4', 'F#4', 'G#4',
@@ -10,11 +12,14 @@
 	];
 
 	export const initAudio = async () => {
+		destinationStream  = Tone.context.createMediaStreamDestination();
+
 		synth = new Tone.PolySynth(4, Tone.Synth, {
 			oscillator : {
 				type : "triangle"
 			}
 		}).toMaster();
+		synth.connect(destinationStream);
 
 		synth.set("detune", -1200);
 
@@ -25,9 +30,7 @@
 
 	export const playRow = async (row) => {
 		if(!synth) {
-			console.error("Please initialize audio before playing a row");
 			await initAudio();
-			return;
 		}
 
 		let notesToPlay = []
@@ -44,5 +47,25 @@
 			await initAudio();
 		}
 		synth.triggerAttackRelease(notes[index], "16n");
+	}
+
+	export const stopRecording = async (audioElement) => {
+		if(recorder) {
+			recorder.stop();
+		}
+	}
+
+	export const startRecording = async (downloadLink) => {
+		recorder = new MediaRecorder(destinationStream.stream);
+		let audioChunks = [];
+		recorder.ondataavailable = (e) => {
+			audioChunks.push(e.data);
+			if (recorder.state === "inactive") {
+				let blob = new Blob(audioChunks, {type: "audio/webm"});
+				downloadLink.href = URL.createObjectURL(blob);
+				downloadLink.click();
+			}
+		}
+		recorder.start();
 	}
 </script>
