@@ -125,8 +125,8 @@
 			{/if}
 		</a>
 		<a on:click={() => dispatch('stop')}><i class="fa fa-inverse fa-lg fa-stop"/></a>
-		<a class="share"><i class="fa fa-lg fa-share-alt"/></a>
 		<a on:click={() => dispatch('clear')}><i class="fa fa-lg fa-trash"/></a>
+		<a class="share"><i class="fa fa-lg fa-share-alt"/></a>
 		<a on:click={() => dispatch('download')}><i class="fa fa-lg fa-download"/></a>
 	</div>
 </div>
