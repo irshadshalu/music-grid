@@ -158,7 +158,7 @@
 
 <div class="container" align="center">
 	<h3>Music Grid</h3>
-	<span class="tagline">Turn on sound. Tap on the grid. Hit Play button. You'll figure it out ;)</span>
+	<span class="tagline">Turn on sound. Tap on the grid.<br/>Hit Play. You'll figure it out ;)</span>
 	<br/>
 	<Controls
 		bind:grid={grid}
@@ -180,10 +180,11 @@
 	</table>
 	<br/>
 	<div class="footer" align="center">
-		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" >Best of Music Grid</a>
+		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" target="_blank">Best of Music Grid</a>
 		<br/>
-		<a href="https://svelte.dev">Made with Svelte</a> | <a href="https://github.com/irshadshalu/music-grid">Source (GitHub)</a> |
-		<a href="https://irshadpi.me" >irshadpi.me</a> 
+		<a href="https://svelte.dev" target="_blank">Svelte</a> 
+		| <a href="https://github.com/irshadshalu/music-grid" target="_blank"><i class="fa fa-lg fa-github"></i></a> 
+		| <a href="https://irshadpi.me" target="_blank">irshad</a> 
 	</div>
 	<br/>
 	<br/>
