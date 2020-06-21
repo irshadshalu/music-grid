@@ -15,7 +15,7 @@
 	let lastRow = 0;
 	let started = false;
 	let downloadLink;
-	let message;
+	let recording = false;
 
 	const togglePlaying = async () => {
 		config.playing = !config.playing;
@@ -94,10 +94,14 @@
 	}
 
 	const downloadAudio = () => {
+		if(recording) {
+			return;
+		}
+
+		recording = true;
 		stopPlaying();
 		config.playing = true;
 		startRecording(downloadLink);
-		message = "Please wait for the playback to finish";
 
 		// Play to completion
 		let playbackTime = (grid.length * 60 * 1000) / config.speed;
@@ -108,8 +112,8 @@
 		// Record for a bit more.
 		setTimeout(() => {
 			stopRecording();
-			message = null;
-		}, playbackTime + 1000);
+			recording = false;
+		}, playbackTime + 500);
 	}
 
 	$: changeSpeed(config.speed);
@@ -165,8 +169,8 @@
 		on:rowchange={() => resizeGrid(config.rows)}
 		on:download={downloadAudio}
 	/>
-	{#if message}
-		<span class="message">{message}</span>
+	{#if recording}
+		<span class="message">Please wait for the playback to finish</span>
 	{/if}
 	<a bind:this={downloadLink} download="music-grid.wav" hidden="true">Download</a>
 	<table on:click|once={startPlaying}>

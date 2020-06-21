@@ -1,0 +1,127 @@
+diff --git a/package-lock.json b/package-lock.json
+index 736c2ed..ff542fc 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -496,6 +496,11 @@
+       "resolved": "https://registry.npmjs.org/mri/-/mri-1.1.5.tgz",
+       "integrity": "sha512-d2RKzMD4JNyHMbnbWnznPaa8vbdlq/4pNZ3IgdaGrVbBhebBsGUUE/6qorTMYNS6TwuH3ilfOlD2bf4Igh8CKg=="
+     },
++    "msr": {
++      "version": "1.3.4",
++      "resolved": "https://registry.npmjs.org/msr/-/msr-1.3.4.tgz",
++      "integrity": "sha1-SJRYRo1TheasGy4RKockqEQxT6I="
++    },
+     "normalize-path": {
+       "version": "3.0.0",
+       "resolved": "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz",
+diff --git a/package.json b/package.json
+index 0e3db68..d85ae7f 100755
+--- a/package.json
++++ b/package.json
+@@ -18,6 +18,7 @@
+   "dependencies": {
+     "clipboard": "^2.0.6",
+     "lottie-web": "^5.6.10",
++    "msr": "^1.3.4",
+     "sirv-cli": "^0.4.4",
+     "tone": "^13.8.25"
+   }
+diff --git a/src/App.svelte b/src/App.svelte
+index 5c0248e..9e5f0bb 100755
+--- a/src/App.svelte
++++ b/src/App.svelte
+@@ -1,7 +1,7 @@
+ <script>
+ 	import Row from './Row.svelte';
+ 	import Controls from './Controls.svelte';
+-	import {initAudio, playRow, startRecording, stopRecording} from './Music.svelte';
++	import {initAudio, playRow, startRecording} from './Music.svelte';
+ 	let config = {
+ 		playing: false,
+ 		speed: 200,
+@@ -93,23 +93,19 @@
+ 		},  60 * 1000 / bpm);
+ 	}
+ 
+-	const downloadAudio = () => {
++	const downloadAudio = async () => {
+ 		stopPlaying();
+-		config.playing = true;
+-		startRecording(downloadLink);
++		await togglePlaying();
++		let playbackTime = (grid.length * 60 * 1000) / config.speed;
+ 		message = "Please wait for the playback to finish";
+ 
++		startRecording(playbackTime + 1000, () => {
++			message = null;
++		});
+ 		// Play to completion
+-		let playbackTime = (grid.length * 60 * 1000) / config.speed;
+ 		setTimeout(() => {
+ 			stopPlaying();
+ 		}, playbackTime);
+-
+-		// Record for a bit more.
+-		setTimeout(() => {
+-			stopRecording();
+-			message = null;
+-		}, playbackTime + 1000);
+ 	}
+ 
+ 	$: changeSpeed(config.speed);
+@@ -168,7 +164,7 @@
+ 	{#if message}
+ 		<span class="message">{message}</span>
+ 	{/if}
+-	<a bind:this={downloadLink} download="music-grid.webm" hidden="true"></a>
++	<a bind:this={downloadLink} download="music-grid.wav" hidden="true"></a>
+ 	<table on:click|once={startPlaying}>
+ 		{#each grid as row}
+ 			<Row bind:row={row} bind:playing={row.isPlaying} paused={!config.playing}/>
+diff --git a/src/Music.svelte b/src/Music.svelte
+index ec06de0..584e013 100644
+--- a/src/Music.svelte
++++ b/src/Music.svelte
+@@ -1,5 +1,6 @@
+ <script context="module">
+ 	import * as Tone from "tone";
++	import MediaStreamRecorder from "msr";
+ 
+ 	let synth;
+ 	let recorder;
+@@ -49,23 +50,19 @@
+ 		synth.triggerAttackRelease(notes[index], "16n");
+ 	}
+ 
+-	export const stopRecording = async (audioElement) => {
+-		if(recorder) {
+-			recorder.stop();
+-		}
+-	}
+-
+-	export const startRecording = async (downloadLink) => {
+-		recorder = new MediaRecorder(destinationStream.stream);
+-		let audioChunks = [];
++	export const startRecording = async (playbackTime, callBack) => {
++		recorder = new MediaStreamRecorder(destinationStream.stream);
++		recorder.recorderType = MediaStreamRecorder.StereoAudioRecorder;
++		recorder.audioChannels = 1;
++		recorder.mimeType = "audio/ogg";
+ 		recorder.ondataavailable = (e) => {
+-			audioChunks.push(e.data);
+-			if (recorder.state === "inactive") {
+-				let blob = new Blob(audioChunks, {type: "audio/webm"});
+-				downloadLink.href = URL.createObjectURL(blob);
+-				downloadLink.click();
+-			}
++			console.log("Downloading");
++			recorder.save();
+ 		}
+-		recorder.start();
++		recorder.start(playbackTime * 2);
++		setTimeout(() => {
++			recorder.stop();
++			callBack();
++		}, playbackTime);
+ 	}
+ </script>
