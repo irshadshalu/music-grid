@@ -182,9 +182,9 @@
 	<div class="footer" align="center">
 		<a href="https://irshadpi.me/2020-06-15/best-of-music-grid" target="_blank">Best of Music Grid</a>
 		<br/>
-		<a href="https://svelte.dev" target="_blank">Made with Svelte</a> 
+		<a href="https://svelte.dev" target="_blank">Svelte</a> 
 		| <a href="https://github.com/irshadshalu/music-grid" target="_blank"><i class="fa fa-lg fa-github"></i></a> 
-		| <a href="https://irshadpi.me" target="_blank">irshadpi.me</a> 
+		| <a href="https://irshadpi.me" target="_blank">irshad</a> 
 	</div>
 	<br/>
 	<br/>
