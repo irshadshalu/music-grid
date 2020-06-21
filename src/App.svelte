@@ -168,7 +168,7 @@
 	{#if message}
 		<span class="message">{message}</span>
 	{/if}
-	<a bind:this={downloadLink} download="music-grid.webm" hidden="true"></a>
+	<a bind:this={downloadLink} download="music-grid.wav" hidden="true"></a>
 	<table on:click|once={startPlaying}>
 		{#each grid as row}
 			<Row bind:row={row} bind:playing={row.isPlaying} paused={!config.playing}/>

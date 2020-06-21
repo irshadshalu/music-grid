@@ -1,5 +1,6 @@
-<script context="module">
-	import * as Tone from "tone";
+<script context='module'>
+	import * as Tone from 'tone';
+	import bufferToWav from 'audiobuffer-to-wav';
 
 	let synth;
 	let recorder;
@@ -16,12 +17,12 @@
 
 		synth = new Tone.PolySynth(4, Tone.Synth, {
 			oscillator : {
-				type : "triangle"
+				type : 'triangle'
 			}
 		}).toMaster();
 		synth.connect(destinationStream);
 
-		synth.set("detune", -1200);
+		synth.set('detune', -1200);
 
 		await Tone.start();
 		await Tone.context.resume();
@@ -39,14 +40,14 @@
 				notesToPlay.push(notes[i]);
 			}
 		}
-		synth.triggerAttackRelease(notesToPlay, "16n");
+		synth.triggerAttackRelease(notesToPlay, '16n');
 	}
 
 	export const playCell = async (index) => {
 		if(!synth) {
 			await initAudio();
 		}
-		synth.triggerAttackRelease(notes[index], "16n");
+		synth.triggerAttackRelease(notes[index], '16n');
 	}
 
 	export const stopRecording = async (audioElement) => {
@@ -56,14 +57,29 @@
 	}
 
 	export const startRecording = async (downloadLink) => {
+		if(!destinationStream) {
+			await initAudio();
+		}
+
 		recorder = new MediaRecorder(destinationStream.stream);
+
 		let audioChunks = [];
-		recorder.ondataavailable = (e) => {
+		recorder.ondataavailable = async (e) => {
 			audioChunks.push(e.data);
-			if (recorder.state === "inactive") {
-				let blob = new Blob(audioChunks, {type: "audio/webm"});
-				downloadLink.href = URL.createObjectURL(blob);
-				downloadLink.click();
+			if (recorder.state === 'inactive') {
+				let blob = new Blob(audioChunks, {
+					type: 'audio/webm'
+				});
+				let arrayBuffer = await blob.arrayBuffer();
+				Tone.context.decodeAudioData(arrayBuffer, (buffer) => {
+					console.log(buffer);
+					let wav = bufferToWav(buffer);
+					let blob = new Blob([ new DataView(wav) ], {
+						type: 'audio/wav'
+					})
+					downloadLink.href = URL.createObjectURL(blob);
+					downloadLink.click();
+				});
 			}
 		}
 		recorder.start();
