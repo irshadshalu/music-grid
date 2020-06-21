@@ -50,7 +50,7 @@
 		synth.triggerAttackRelease(notes[index], '16n');
 	}
 
-	export const stopRecording = async (audioElement) => {
+	export const stopRecording = async () => {
 		if(recorder) {
 			recorder.stop();
 		}
@@ -65,22 +65,15 @@
 
 		let audioChunks = [];
 		recorder.ondataavailable = async (e) => {
-			audioChunks.push(e.data);
-			if (recorder.state === 'inactive') {
-				let blob = new Blob(audioChunks, {
-					type: 'audio/webm'
-				});
-				let arrayBuffer = await blob.arrayBuffer();
-				Tone.context.decodeAudioData(arrayBuffer, (buffer) => {
-					console.log(buffer);
-					let wav = bufferToWav(buffer);
-					let blob = new Blob([ new DataView(wav) ], {
-						type: 'audio/wav'
-					})
-					downloadLink.href = URL.createObjectURL(blob);
-					downloadLink.click();
-				});
-			}
+			let arrayBuffer = await e.data.arrayBuffer();
+			Tone.context.decodeAudioData(arrayBuffer, (buffer) => {
+				let wav = bufferToWav(buffer);
+				let blob = new Blob([ new DataView(wav) ], {
+					type: 'audio/wav'
+				})
+				downloadLink.href = URL.createObjectURL(blob);
+				downloadLink.click();
+			});
 		}
 		recorder.start();
 	}
