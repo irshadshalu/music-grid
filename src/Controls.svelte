@@ -1,6 +1,7 @@
 <script>
 	import { createEventDispatcher, onMount } from 'svelte';
 	import ClipboardJS from 'clipboard';
+	import { scale_keys } from './Music.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -10,7 +11,7 @@
 	let urlUpdatedRecently = false;
 	let scrollY = 0;
 
-	const encodeGridToUrl = (grid, speed) => {
+	const encodeGridToUrl = (grid, speed, scale) => {
 		let res = ''
 		for (var i = grid.length - 1; i >= 0; i--) {
 			let temp = 0, k = 1;
@@ -20,23 +21,23 @@
 			}
 			res += (temp + '-');
 		}
-		history.replaceState({}, '', '#' + res + '&' + speed);
+		history.replaceState({}, '', '#' + res + '&' + speed + '&' + scale);
 	}
 
-	const updateUrl = (grid, speed) => {
+	const updateUrl = (grid, speed, scale) => {
 		if(!urlUpdatedRecently) {
-			encodeGridToUrl(grid, speed);
+			encodeGridToUrl(grid, speed, scale);
 			urlUpdatedRecently = true;
 			setTimeout(() => {urlUpdatedRecently = false}, 1000);
 		}
 	}
 
-	$: updateUrl(grid, config.speed);
+	$: updateUrl(grid, config.speed, config.scale_key);
 
 
 	let clipboard = new ClipboardJS('.share', {
 		text: function() {
-			encodeGridToUrl(grid, config.speed);
+			encodeGridToUrl(grid, config.speed, config.scale_key);
 			return window.location.href;
 		}
 	});
@@ -96,6 +97,13 @@
 		left: 0;
 		width: 100%;
 	}
+
+	select {
+		background: black;
+		color: white;
+		border: none;
+		outline: none;
+	}
 </style>
 <svelte:window bind:scrollY={scrollY}/>
 
@@ -114,6 +122,17 @@
 			<input bind:value={config.speed}
 			 type="range" min="60" max="500" class="slider">
 			 {config.speed}
+		</label>
+		<br/>
+		<label>
+			Scale :
+			<select bind:value={config.scale_key} on:change={() => dispatch('scalechange')}>
+				{#each scale_keys as scale}
+				<option value={scale}>
+					{scale}
+				</option>
+				{/each}
+			</select>
 		</label>
 	</div>
 	<div class={primaryClass} bind:this={header}>
