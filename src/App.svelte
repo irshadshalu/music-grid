@@ -9,7 +9,7 @@
 		scale_key: 'classic',
 	}
 
-	let columns = 14;
+	let columns = 12;
 	let grid = [];
 	let gameInterval;
 	let curRow = 0;
@@ -132,7 +132,6 @@
 <style>
 	table {
 		background: black;
-		transform: scale(0.9);
 	}
 
 	.container {
