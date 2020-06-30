@@ -1,14 +1,15 @@
 <script>
 	import Row from './Row.svelte';
 	import Controls from './Controls.svelte';
-	import {initAudio, playRow, startRecording, stopRecording} from './Music.svelte';
+	import {initAudio, playRow, startRecording, stopRecording, setScale} from './Music.svelte';
 	let config = {
 		playing: false,
 		speed: 200,
-		rows: 16
+		rows: 16,
+		scale_key: 'classic',
 	}
 
-	let columns = 12;
+	let columns = 14;
 	let grid = [];
 	let gameInterval;
 	let curRow = 0;
@@ -78,6 +79,9 @@
 		if(hash.split('&').length > 1) {
 			config.speed = parseInt(hash.split('&')[1], 10);
 		}
+		if(hash.split('&').length > 2) {
+			config.scale_key = hash.split('&')[2];
+		}
 	}
 
 	const changeSpeed = (bpm) => {
@@ -128,6 +132,7 @@
 <style>
 	table {
 		background: black;
+		transform: scale(0.9);
 	}
 
 	.container {
@@ -167,6 +172,7 @@
 		on:stop={stopPlaying}
 		on:clear={() => clearGrid(config.rows)}
 		on:rowchange={() => resizeGrid(config.rows)}
+		on:scalechange={() => setScale(config.scale_key)}
 		on:download={downloadAudio}
 	/>
 	{#if recording}
